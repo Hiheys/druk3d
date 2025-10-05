@@ -1,0 +1,841 @@
+const filamentTypes = [
+    {
+      name: 'PLA',
+      temp: '190-220°C',
+      bed: '50-60°C',
+      price: '30-100 zł/kg',
+      pros: [
+        'Łatwy w druku',
+        'Niska temperatura stołu',
+        'Ekologiczny (biodegradowalny w warunkach przemysłowych)',
+        'Dostępny w wielu kolorach i odmianach'
+      ],
+      cons: [
+        'Niska odporność na wysoką temperaturę',
+        'Dość kruchy',
+        'Mniej wytrzymały mechanicznie'
+      ],
+      uses: 'Figurki i modele kolekcjonerskie, prototypy koncepcyjne, dekoracje i gadżety, części mało obciążone',
+      szpulomat: 'Najlepsza oferta* (szpulomat.pl)'
+    },
+    {
+      name: 'HT-PLA',
+      temp: '200-230°C',
+      bed: '40-60°C',
+      price: '80-120 zł/kg',
+      pros: [
+        'Drukuje się jak PLA',
+        'Po wygrzewaniu odporność cieplna do ~120-150°C',
+        'Łatwy w obróbce',
+        'Lepsze właściwości mechaniczne niż PLA'
+      ],
+      cons: [
+        'Wymaga wygrzewania (annealing) do pełnych właściwości',
+        'Ryzyko deformacji podczas wygrzewania',
+        'Nie tak wytrzymały jak materiały inżynierskie'
+      ],
+      uses: 'Prototypy odporne na ciepło, narzędzia i uchwyty warsztatowe, elementy użytkowe narażone na temperaturę, łatwo drukowalne wytrzymałe części',
+      szpulomat: 'Najlepsza oferta* (szpulomat.pl)'
+    },
+    {
+      name: 'ABS',
+      temp: '220-250°C',
+      bed: '90-110°C',
+      price: '50–90 zł/kg',
+      pros: [
+        'Dobra odporność mechaniczna i udarowa',
+        'Lepsza odporność cieplna niż PLA',
+        'Możliwość obróbki chemicznej (aceton)',
+        'Stosowany w przemyśle (obudowy, elementy funkcjonalne)'
+      ],
+      cons: [
+        'Silny skurcz i warping',
+        'Wymaga obudowy i wentylacji',
+        'Emisja nieprzyjemnych oparów',
+      ],
+      uses: 'Obudowy urządzeń elektronicznych, elementy odporne na udar, części do modeli RC, detale wygładzane acetonem',
+      szpulomat: 'Najlepsza oferta* (szpulomat.pl)'
+    },
+    {
+      name: 'ASA',
+      temp: '230-260°C',
+      bed: '90-110°C',
+      price: '110–170 zł/kg',
+      pros: [
+        'Odporność na UV i warunki atmosferyczne',
+        'Wytrzymałość mechaniczna zbliżona do ABS',
+        'Możliwość obróbki chemicznej (aceton)',
+        'Dobre do zastosowań outdoor'
+      ],
+      cons: [
+        'Wysoka temperatura druku',
+        'Może emitować opary',
+        'Wymaga obudowy i stabilnych warunków',
+      ],
+      uses: 'Elementy montowane na zewnątrz, części do pojazdów narażone na UV, reklamy i oznaczenia outdoorowe, osłony odporne na warunki atmosferyczne',
+      szpulomat: 'Najlepsza oferta* (szpulomat.pl)'
+    },
+    {
+      name: 'PETG',
+      temp: '220-250°C',
+      bed: '70-80°C',
+      price: '85–140 zł/kg',
+      pros: [
+        'Wytrzymały',
+        'Odporny na wilgoć i chemikalia',
+        'Dobra elastyczność',
+        'Przezroczyste warianty'
+      ],
+      cons: [
+        'Tendencja do nitkowania',
+        'Klejący się wydruk (trudniejsze wykończenie)',
+      ],
+      uses: 'Części użytkowe w domu, pojemniki i elementy kontaktujące się z wodą, mechaniczne elementy o średnich obciążeniach, funkcjonalne prototypy',
+      szpulomat: 'Najlepsza oferta* (szpulomat.pl)'
+    },
+    {
+      name: 'TPU',
+      temp: '210-230°C',
+      bed: '40-60°C',
+      price: '90–150 zł/kg',
+      pros: [
+        'Elastyczny i gumopodobny',
+        'Odporny na uderzenia',
+        'Dobra przyczepność warstw',
+        'Świetny do elementów amortyzujących'
+      ],
+      cons: [
+        'Trudny w druku (wymaga wolnych prędkości)',
+        'Najlepiej działa z ekstruderem direct-drive',
+        'Może się rozciągać w podajniku'
+      ],
+      uses: 'Etui na telefony, uszczelki, amortyzatory, elementy elastyczne',
+      szpulomat: 'Najlepsza oferta* (szpulomat.pl)'
+    },
+    {
+      name: 'PA12-CF15',
+      temp: '255-270°C',
+      bed: '90-110°C',
+      price: '300–400 zł/kg',
+      pros: [
+        'Bardzo wysoka sztywność i wytrzymałość',
+        'Odporność cieplna do ~160–170 °C',
+        'Dobra stabilność wymiarowa',
+        'Idealny do części inżynierskich'
+      ],
+      cons: [
+        'Bardzo higroskopijny (wymaga suszenia)',
+        'Ścierny (wymaga hartowanej dyszy)',
+        'Wysoka cena',
+        'Wymaga obudowy i wysokich temperatur'
+      ],
+      uses: 'Części mechaniczne obciążone, elementy konstrukcyjne wysokotemperaturowe, detale inżynierskie zastępujące metal, komponenty w dronach i robotyce',
+      szpulomat: 'Najlepsza oferta* (szpulomat.pl)'
+    },
+    {
+      name: 'PC (Poliwęglan)',
+      temp: '260-310°C',
+      bed: '100-120°C',
+      price: '180–250 zł/kg',
+      pros: [
+        'Bardzo wytrzymały mechanicznie',
+        'Wysoka odporność cieplna (do ~120°C)',
+        'Przezroczysty',
+        'Stosowany w elementach przemysłowych'
+      ],
+      cons: [
+        'Bardzo trudny w druku (warping)',
+        'Wymaga wysokiej temperatury dyszy i komory',
+        'Chłonie wilgoć'
+      ],
+      uses: 'Osłony mechaniczne, elementy przezroczyste, części przemysłowe, prototypy funkcjonalne',
+      szpulomat: 'Najlepsza oferta* (szpulomat.pl)'
+    },
+    {
+      name: 'Nylon (PA6/PA12)',
+      temp: '240-270°C',
+      bed: '70-100°C',
+      price: '150–250 zł/kg',
+      pros: [
+        'Bardzo wytrzymały i elastyczny',
+        'Odporny na ścieranie',
+        'Dobra odporność chemiczna',
+        'Trwały materiał inżynierski'
+      ],
+      cons: [
+        'Bardzo higroskopijny (konieczne suszenie)',
+        'Może się wypaczać',
+        'Wymaga wysokiej temperatury'
+      ],
+      uses: 'Koła zębate, zawiasy, części mechaniczne, elementy zużywające się',
+      szpulomat: 'Najlepsza oferta* (szpulomat.pl)'
+    },
+    {
+      name: 'PP (Polipropylen)',
+      temp: '220-250°C',
+      bed: '60-100°C',
+      price: '120–160 zł/kg',
+      pros: [
+        'Lekki',
+        'Odporny chemicznie',
+        'Półprzezroczysty',
+        'Dobra elastyczność'
+      ],
+      cons: [
+        'Trudny w druku (słaba adhezja do stołu)',
+        'Wysoki skurcz',
+        'Ograniczona dostępność'
+      ],
+      uses: 'Pojemniki i butelki, zawiasy, elementy odporne chemicznie, prototypy funkcjonalne',
+      szpulomat: 'Najlepsza oferta* (szpulomat.pl)'
+    }
+  ];
+
+
+
+
+"use client";
+import React, { useState } from 'react';
+import {
+  Box,
+  Layers,
+  Printer,
+  Calculator as CalcIcon,
+  BookOpen,
+  AlertCircle,
+  Info,
+  CheckCircle,
+  ArrowRight
+} from 'lucide-react';
+import GuidesSection from '@/components/GuidesSection';
+import Calculator from '@/components/calculator';
+import PrinterAnimation from '@/components/PrinterAnimation';
+import FilamentFlow from '@/components/FilamentFlow';
+
+function App() {
+  const [activeSection, setActiveSection] = useState('home');
+
+  const filamentTypes = [
+    {
+      name: 'PLA',
+      temp: '190-220°C',
+      bed: '50-60°C',
+      price: '30-100 zł/kg',
+      pros: [
+        'Łatwy w druku',
+        'Niska temperatura stołu',
+        'Ekologiczny (biodegradowalny w warunkach przemysłowych)',
+        'Dostępny w wielu kolorach i odmianach'
+      ],
+      cons: [
+        'Niska odporność na wysoką temperaturę',
+        'Dość kruchy',
+        'Mniej wytrzymały mechanicznie'
+      ],
+      uses: 'Figurki i modele kolekcjonerskie, prototypy koncepcyjne, dekoracje i gadżety, części mało obciążone',
+      szpulomat: 'Najlepsza oferta* (szpulomat.pl)'
+    },
+    {
+      name: 'HT-PLA',
+      temp: '200-230°C',
+      bed: '40-60°C',
+      price: '80-120 zł/kg',
+      pros: [
+        'Drukuje się jak PLA',
+        'Po wygrzewaniu odporność cieplna do ~120-150°C',
+        'Łatwy w obróbce',
+        'Lepsze właściwości mechaniczne niż PLA'
+      ],
+      cons: [
+        'Wymaga wygrzewania (annealing) do pełnych właściwości',
+        'Ryzyko deformacji podczas wygrzewania',
+        'Nie tak wytrzymały jak materiały inżynierskie'
+      ],
+      uses: 'Prototypy odporne na ciepło, narzędzia i uchwyty warsztatowe, elementy użytkowe narażone na temperaturę, łatwo drukowalne wytrzymałe części',
+      szpulomat: 'Najlepsza oferta* (szpulomat.pl)'
+    },
+    {
+      name: 'ABS',
+      temp: '220-250°C',
+      bed: '90-110°C',
+      price: '50–90 zł/kg',
+      pros: [
+        'Dobra odporność mechaniczna i udarowa',
+        'Lepsza odporność cieplna niż PLA',
+        'Możliwość obróbki chemicznej (aceton)',
+        'Stosowany w przemyśle (obudowy, elementy funkcjonalne)'
+      ],
+      cons: [
+        'Silny skurcz i warping',
+        'Wymaga obudowy i wentylacji',
+        'Emisja nieprzyjemnych oparów',
+      ],
+      uses: 'Obudowy urządzeń elektronicznych, elementy odporne na udar, części do modeli RC, detale wygładzane acetonem',
+      szpulomat: 'Najlepsza oferta* (szpulomat.pl)'
+    },
+    {
+      name: 'ASA',
+      temp: '230-260°C',
+      bed: '90-110°C',
+      price: '110–170 zł/kg',
+      pros: [
+        'Odporność na UV i warunki atmosferyczne',
+        'Wytrzymałość mechaniczna zbliżona do ABS',
+        'Możliwość obróbki chemicznej (aceton)',
+        'Dobre do zastosowań outdoor'
+      ],
+      cons: [
+        'Wysoka temperatura druku',
+        'Może emitować opary',
+        'Wymaga obudowy i stabilnych warunków',
+      ],
+      uses: 'Elementy montowane na zewnątrz, części do pojazdów narażone na UV, reklamy i oznaczenia outdoorowe, osłony odporne na warunki atmosferyczne',
+      szpulomat: 'Najlepsza oferta* (szpulomat.pl)'
+    },
+    {
+      name: 'PETG',
+      temp: '220-250°C',
+      bed: '70-80°C',
+      price: '85–140 zł/kg',
+      pros: [
+        'Wytrzymały',
+        'Odporny na wilgoć i chemikalia',
+        'Dobra elastyczność',
+        'Przezroczyste warianty'
+      ],
+      cons: [
+        'Tendencja do nitkowania',
+        'Klejący się wydruk (trudniejsze wykończenie)',
+      ],
+      uses: 'Części użytkowe w domu, pojemniki i elementy kontaktujące się z wodą, mechaniczne elementy o średnich obciążeniach, funkcjonalne prototypy',
+      szpulomat: 'Najlepsza oferta* (szpulomat.pl)'
+    },
+    {
+      name: 'TPU',
+      temp: '210-230°C',
+      bed: '40-60°C',
+      price: '90–150 zł/kg',
+      pros: [
+        'Elastyczny i gumopodobny',
+        'Odporny na uderzenia',
+        'Dobra przyczepność warstw',
+        'Świetny do elementów amortyzujących'
+      ],
+      cons: [
+        'Trudny w druku (wymaga wolnych prędkości)',
+        'Najlepiej działa z ekstruderem direct-drive',
+        'Może się rozciągać w podajniku'
+      ],
+      uses: 'Etui na telefony, uszczelki, amortyzatory, elementy elastyczne',
+      szpulomat: 'Najlepsza oferta* (szpulomat.pl)'
+    },
+    {
+      name: 'PA12-CF15',
+      temp: '255-270°C',
+      bed: '90-110°C',
+      price: '300–400 zł/kg',
+      pros: [
+        'Bardzo wysoka sztywność i wytrzymałość',
+        'Odporność cieplna do ~160–170 °C',
+        'Dobra stabilność wymiarowa',
+        'Idealny do części inżynierskich'
+      ],
+      cons: [
+        'Bardzo higroskopijny (wymaga suszenia)',
+        'Ścierny (wymaga hartowanej dyszy)',
+        'Wysoka cena',
+        'Wymaga obudowy i wysokich temperatur'
+      ],
+      uses: 'Części mechaniczne obciążone, elementy konstrukcyjne wysokotemperaturowe, detale inżynierskie zastępujące metal, komponenty w dronach i robotyce',
+      szpulomat: 'Najlepsza oferta* (szpulomat.pl)'
+    },
+    {
+      name: 'PC (Poliwęglan)',
+      temp: '260-310°C',
+      bed: '100-120°C',
+      price: '180–250 zł/kg',
+      pros: [
+        'Bardzo wytrzymały mechanicznie',
+        'Wysoka odporność cieplna (do ~120°C)',
+        'Przezroczysty',
+        'Stosowany w elementach przemysłowych'
+      ],
+      cons: [
+        'Bardzo trudny w druku (warping)',
+        'Wymaga wysokiej temperatury dyszy i komory',
+        'Chłonie wilgoć'
+      ],
+      uses: 'Osłony mechaniczne, elementy przezroczyste, części przemysłowe, prototypy funkcjonalne',
+      szpulomat: 'Najlepsza oferta* (szpulomat.pl)'
+    },
+    {
+      name: 'Nylon (PA6/PA12)',
+      temp: '240-270°C',
+      bed: '70-100°C',
+      price: '150–250 zł/kg',
+      pros: [
+        'Bardzo wytrzymały i elastyczny',
+        'Odporny na ścieranie',
+        'Dobra odporność chemiczna',
+        'Trwały materiał inżynierski'
+      ],
+      cons: [
+        'Bardzo higroskopijny (konieczne suszenie)',
+        'Może się wypaczać',
+        'Wymaga wysokiej temperatury'
+      ],
+      uses: 'Koła zębate, zawiasy, części mechaniczne, elementy zużywające się',
+      szpulomat: 'Najlepsza oferta* (szpulomat.pl)'
+    },
+    {
+      name: 'PP (Polipropylen)',
+      temp: '220-250°C',
+      bed: '60-100°C',
+      price: '120–160 zł/kg',
+      pros: [
+        'Lekki',
+        'Odporny chemicznie',
+        'Półprzezroczysty',
+        'Dobra elastyczność'
+      ],
+      cons: [
+        'Trudny w druku (słaba adhezja do stołu)',
+        'Wysoki skurcz',
+        'Ograniczona dostępność'
+      ],
+      uses: 'Pojemniki i butelki, zawiasy, elementy odporne chemicznie, prototypy funkcjonalne',
+      szpulomat: 'Najlepsza oferta* (szpulomat.pl)'
+    }
+  ];
+
+
+  const troubleshooting = [
+    {
+      problem: 'Warping (Odkształcanie)',
+      solution: 'Zwiększ temperaturę łoża, użyj brim/raft, sprawdź wentylację',
+      severity: 'high'
+    },
+    {
+      problem: 'Stringing (Ciągnięcie)',
+      solution: 'Włącz retrakcję, obniż temperaturę, zwiększ prędkość ruchu',
+      severity: 'medium'
+    },
+    {
+      problem: 'Under-extrusion',
+      solution: 'Sprawdź czy filament się nie zacina, zwiększ temperaturę, wyczyść dyszę',
+      severity: 'high'
+    },
+    {
+      problem: 'Słaba Przyczepność Warstw',
+      solution: 'Zwiększ temperaturę, zmniejsz wysokość warstwy, zwolnij prędkość',
+      severity: 'medium'
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-black text-white">
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black"></div>
+      </div>
+
+      <div className="relative z-10">
+        <header className="border-b border-white/10 bg-black/50 backdrop-blur-sm sticky top-0 z-50">
+          <div className="container mx-auto px-4 py-4 sm:px-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Box className="h-8 w-8 text-[#ffda75]" />
+                <span className="text-xl font-bold">Druk<span className="text-[#ffda75]">3D.pl</span></span>
+              </div>
+              <nav className="hidden space-x-6 md:flex">
+                <button onClick={() => setActiveSection('home')} className="transition-colors hover:text-[#ffda75]">Start</button>
+                <button onClick={() => setActiveSection('calculator')} className="transition-colors hover:text-[#ffda75]">Kalkulator</button>
+                <button onClick={() => setActiveSection('guides')} className="transition-colors hover:text-[#ffda75]">Poradniki</button>
+                <button onClick={() => setActiveSection('materials')} className="transition-colors hover:text-[#ffda75]">Materiały</button>
+                <button onClick={() => setActiveSection('troubleshoot')} className="transition-colors hover:text-[#ffda75]">Problemy</button>
+              </nav>
+            </div>
+          </div>
+        </header>
+
+        {activeSection === 'home' && (
+          <>
+            <section className="relative min-h-screen overflow-hidden border-b border-white/10">
+              <div className="absolute inset-0" style={{ animation: 'grid-flow 20s linear infinite' }}>
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:48px_48px]"></div>
+              </div>
+
+              <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute right-0 top-0 h-[500px] w-[500px] rounded-full bg-[#ffda75] opacity-10 blur-[120px] filter" style={{ animation: 'float 8s ease-in-out infinite' }}></div>
+                <div className="absolute -left-32 bottom-0 h-[400px] w-[400px] rounded-full bg-[#e6c05a] opacity-10 blur-[100px] filter" style={{ animation: 'float 6s ease-in-out infinite', animationDelay: '1s' }}></div>
+              </div>
+
+              <div className="container relative mx-auto grid min-h-screen grid-cols-1 items-center gap-12 px-4 py-24 sm:px-6 lg:grid-cols-2">
+                <div className="relative z-10 space-y-8">
+                  <div className="inline-flex items-center space-x-2 rounded-full border border-[#ffda75]/30 bg-[#ffda75]/10 px-4 py-2 text-sm font-medium text-[#ffda75] backdrop-blur-sm">
+                    <Layers className="h-4 w-4" />
+                    <span>Warstwa po warstwie</span>
+                  </div>
+
+                  <h1 className="text-5xl font-bold leading-tight sm:text-6xl lg:text-7xl">
+                    Twórz
+                    <span className="block bg-gradient-to-r from-[#ffda75] via-[#e6c05a] to-[#ffda75] bg-clip-text text-transparent">
+                      Przyszłość
+                    </span>
+                    <span className="block">Warstwa po Warstwie</span>
+                  </h1>
+
+                  <p className="max-w-lg text-lg leading-relaxed text-gray-400">
+                    Od pomysłu do rzeczywistości. Kompleksowy przewodnik po druku 3D dla wszystkich - od początkujących po ekspertów.
+                  </p>
+
+                  <div className="flex flex-col gap-4 sm:flex-row">
+                    <button
+                      onClick={() => setActiveSection('guides')}
+                      className="group relative overflow-hidden rounded-xl bg-[#ffda75] px-8 py-4 font-semibold text-black transition-all hover:bg-[#e6c05a] hover:shadow-[0_0_30px_rgba(255,218,117,0.5)]"
+                    >
+                      <span className="relative z-10 flex items-center justify-center">
+                        Rozpocznij Naukę
+                        <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                      </span>
+                    </button>
+                    <button
+                      onClick={() => setActiveSection('calculator')}
+                      className="group rounded-xl border border-white/10 bg-white/5 px-8 py-4 font-semibold transition-all hover:border-[#ffda75]/30 hover:bg-white/10 backdrop-blur-sm"
+                    >
+                      <span className="flex items-center justify-center">
+                        <CalcIcon className="mr-2 h-5 w-5" />
+                        Kalkulator
+                      </span>
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-8 pt-4">
+                    <div>
+                      <div className="text-3xl font-bold text-[#ffda75]">500+</div>
+                      <div className="text-sm text-gray-500">Poradników</div>
+                    </div>
+                    <div className="h-8 w-px bg-white/10"></div>
+                    <div>
+                      <div className="text-3xl font-bold text-[#ffda75]">50k+</div>
+                      <div className="text-sm text-gray-500">Użytkowników</div>
+                    </div>
+                    <div className="h-8 w-px bg-white/10"></div>
+                    <div>
+                      <div className="text-3xl font-bold text-[#ffda75]">100%</div>
+                      <div className="text-sm text-gray-500">Darmowe</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="relative z-10">
+                  <div className="relative rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent p-8 backdrop-blur-sm">
+                    <PrinterAnimation />
+                    <div className="absolute -right-4 -top-4 rounded-lg border border-white/10 bg-black/80 px-4 py-2 text-sm backdrop-blur-sm">
+                      <div className="text-[#ffda75]">Status: Aktywny</div>
+                    </div>
+                    <div className="absolute -bottom-4 -left-4 rounded-lg border border-white/10 bg-black/80 px-4 py-2 text-sm backdrop-blur-sm">
+                      <div className="text-gray-400">Temperatura: 210°C</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+                <div className="flex flex-col items-center text-[#ffda75]/60">
+                  <div className="mb-1 text-xs">Przewiń w dół</div>
+                  <div className="h-6 w-px bg-gradient-to-b from-[#ffda75] to-transparent"></div>
+                </div>
+              </div>
+            </section>
+
+            <section className="relative border-b border-white/10 py-24 sm:py-32">
+              <div className="container mx-auto px-4 sm:px-6">
+                <div className="mb-16 text-center">
+                  <div className="mb-4 inline-block rounded-full border border-[#ffda75]/30 bg-[#ffda75]/10 px-4 py-1 text-sm font-medium text-[#ffda75]">
+                    Funkcje platformy
+                  </div>
+                  <h2 className="mb-4 text-4xl font-bold sm:text-5xl">Wszystko czego potrzebujesz</h2>
+                  <p className="mx-auto max-w-2xl text-lg text-gray-400">
+                    Kompleksowe narzędzia i wiedza w jednym miejscu
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+                  <div
+                    onClick={() => setActiveSection('calculator')}
+                    className="group relative cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent p-8 transition-all hover:border-[#ffda75]/30 hover:shadow-[0_0_30px_rgba(255,218,117,0.1)] backdrop-blur-sm"
+                  >
+                    <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-[#ffda75] opacity-10 blur-3xl transition-all group-hover:opacity-20"></div>
+                    <div className="relative">
+                      <div className="mb-6 inline-flex rounded-xl bg-[#ffda75]/10 p-4 text-[#ffda75] transition-transform group-hover:scale-110">
+                        <CalcIcon className="h-8 w-8" />
+                      </div>
+                      <h3 className="mb-3 text-xl font-bold">Kalkulator Kosztów</h3>
+                      <p className="text-sm leading-relaxed text-gray-400">
+                        Precyzyjne obliczenia kosztów druku z uwzględnieniem filamentu, energii i czasu
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    onClick={() => setActiveSection('guides')}
+                    className="group relative cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent p-8 transition-all hover:border-[#ffda75]/30 hover:shadow-[0_0_30px_rgba(255,218,117,0.1)] backdrop-blur-sm"
+                  >
+                    <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-[#ffda75] opacity-10 blur-3xl transition-all group-hover:opacity-20"></div>
+                    <div className="relative">
+                      <div className="mb-6 inline-flex rounded-xl bg-[#ffda75]/10 p-4 text-[#ffda75] transition-transform group-hover:scale-110">
+                        <BookOpen className="h-8 w-8" />
+                      </div>
+                      <h3 className="mb-3 text-xl font-bold">Poradniki</h3>
+                      <p className="text-sm leading-relaxed text-gray-400">
+                        Szczegółowe przewodniki od podstaw po zaawansowane techniki druku 3D
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    onClick={() => setActiveSection('materials')}
+                    className="group relative cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent p-8 transition-all hover:border-[#ffda75]/30 hover:shadow-[0_0_30px_rgba(255,218,117,0.1)] backdrop-blur-sm"
+                  >
+                    <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-[#ffda75] opacity-10 blur-3xl transition-all group-hover:opacity-20"></div>
+                    <div className="relative">
+                      <div className="mb-6 inline-flex rounded-xl bg-[#ffda75]/10 p-4 text-[#ffda75] transition-transform group-hover:scale-110">
+                        <Layers className="h-8 w-8" />
+                      </div>
+                      <h3 className="mb-3 text-xl font-bold">Baza Materiałów</h3>
+                      <p className="text-sm leading-relaxed text-gray-400">
+                        Kompendium wiedzy o filamentach, temperaturach i właściwościach
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    onClick={() => setActiveSection('troubleshoot')}
+                    className="group relative cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent p-8 transition-all hover:border-[#ffda75]/30 hover:shadow-[0_0_30px_rgba(255,218,117,0.1)] backdrop-blur-sm"
+                  >
+                    <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-[#ffda75] opacity-10 blur-3xl transition-all group-hover:opacity-20"></div>
+                    <div className="relative">
+                      <div className="mb-6 inline-flex rounded-xl bg-[#ffda75]/10 p-4 text-[#ffda75] transition-transform group-hover:scale-110">
+                        <AlertCircle className="h-8 w-8" />
+                      </div>
+                      <h3 className="mb-3 text-xl font-bold">Rozwiązywanie Problemów</h3>
+                      <p className="text-sm leading-relaxed text-gray-400">
+                        Szybkie diagnozy i rozwiązania najczęstszych wyzwań w druku
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section className="relative border-b border-white/10 py-24 sm:py-32">
+              <div className="container mx-auto px-4 sm:px-6">
+                <div className="mb-16 text-center">
+                  <h2 className="mb-4 text-4xl font-bold sm:text-5xl">Jak działa druk 3D?</h2>
+                  <p className="mx-auto max-w-2xl text-lg text-gray-400">
+                    Poznaj technologię która zmienia sposób tworzenia obiektów
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+                  <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent p-8 backdrop-blur-sm">
+                    <div className="absolute right-0 top-0 h-48 w-48 rounded-full bg-[#ffda75] opacity-5 blur-3xl"></div>
+                    <div className="relative">
+                      <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ffda75]/10">
+                        <Printer className="h-8 w-8 text-[#ffda75]" />
+                      </div>
+                      <h3 className="mb-4 text-2xl font-bold">Technologia FDM</h3>
+                      <p className="mb-6 leading-relaxed text-gray-400">
+                        Roztopiony filament jest precyzyjnie nakładany warstwa po warstwie, budując trójwymiarowy obiekt od podstaw.
+                      </p>
+                      <div className="space-y-3">
+                        <div className="flex items-start">
+                          <CheckCircle className="mr-3 mt-1 h-5 w-5 flex-shrink-0 text-[#ffda75]" />
+                          <span className="text-sm text-gray-400">Przystępna technologia</span>
+                        </div>
+                        <div className="flex items-start">
+                          <CheckCircle className="mr-3 mt-1 h-5 w-5 flex-shrink-0 text-[#ffda75]" />
+                          <span className="text-sm text-gray-400">Szeroki wybór materiałów</span>
+                        </div>
+                        <div className="flex items-start">
+                          <CheckCircle className="mr-3 mt-1 h-5 w-5 flex-shrink-0 text-[#ffda75]" />
+                          <span className="text-sm text-gray-400">Łatwa obsługa</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent p-8 backdrop-blur-sm">
+                    <div className="absolute right-0 top-0 h-48 w-48 rounded-full bg-[#ffda75] opacity-5 blur-3xl"></div>
+                    <div className="relative">
+                      <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ffda75]/10">
+                        <Info className="h-8 w-8 text-[#ffda75]" />
+                      </div>
+                      <h3 className="mb-4 text-2xl font-bold">Parametry Kluczowe</h3>
+                      <p className="mb-6 leading-relaxed text-gray-400">
+                        Precyzyjna kontrola temperatury, prędkości i wysokości warstw zapewnia idealne rezultaty.
+                      </p>
+                      <div className="space-y-3">
+                        <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                          <div className="mb-1 font-semibold text-[#ffda75]">Wysokość Warstwy</div>
+                          <div className="text-xs text-gray-500">0.1-0.3mm dla optymalnej jakości</div>
+                        </div>
+                        <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                          <div className="mb-1 font-semibold text-[#ffda75]">Temperatura</div>
+                          <div className="text-xs text-gray-500">190-250°C w zależności od materiału</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent p-8 backdrop-blur-sm">
+                    <div className="absolute right-0 top-0 h-48 w-48 rounded-full bg-[#ffda75] opacity-5 blur-3xl"></div>
+                    <div className="relative h-full">
+                      <FilamentFlow />
+                      <div className="mt-6">
+                        <h3 className="mb-2 text-lg font-bold">Proces Ekstrudowania</h3>
+                        <p className="text-sm text-gray-400">
+                          Filament jest podgrzewany i precyzyjnie nakładany, tworząc solidne połączenia między warstwami.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </>
+        )}
+
+        {activeSection === 'calculator' && (
+          <section className="py-16 sm:py-24">
+            <div className="container mx-auto px-4 sm:px-6">
+              <Calculator />
+            </div>
+          </section>
+        )}
+
+        {activeSection === 'guides' && (
+          <section className="py-16 sm:py-24">
+            <div className="container mx-auto px-4 sm:px-6">
+              <GuidesSection />
+            </div>
+          </section>
+        )}
+
+        {activeSection === 'materials' && (
+          <section className="py-16 sm:py-24">
+            <div className="container mx-auto px-4 sm:px-6">
+              <div className="mb-12 text-center">
+                <h2 className="mb-4 text-3xl font-bold sm:text-4xl">Baza Wiedzy o Filamentach</h2>
+                <p className="text-gray-400">Porównaj właściwości różnych materiałów</p>
+              </div>
+              <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+                {filamentTypes.map((filament, index) => (
+                  <div
+                    key={index}
+                    className="rounded-xl border border-white/10 bg-white/5 p-8 transition-all hover:border-[#ffda75]/30"
+                  >
+                    <div className="mb-4 flex items-start justify-between">
+                      <h3 className="text-3xl font-bold text-[#ffda75]">{filament.name}</h3>
+                      <div className="rounded-lg border border-white/10 bg-white/5 p-3 text-center">
+                        <div className="text-xs text-gray-400">Cena (+/-)</div>
+                        <div className="text-sm font-bold">{filament.price}</div>
+                      </div>
+                    </div>
+
+                    <div className="mb-4 flex items-center space-x-4 text-sm text-gray-400">
+                      <div>
+                        <span className="text-gray-500">Stół:</span> {filament.bed}
+                      </div>
+                      <div>
+                        <span className="text-gray-500">Dysza:</span> {filament.temp}
+                      </div>
+                    </div>
+
+                    <div className="mb-4">
+                      <div className="mb-2 text-sm font-semibold text-green-400">Zalety:</div>
+                      <ul className="space-y-1 text-sm text-gray-400">
+                        {filament.pros.map((pro, i) => (
+                          <li key={i} className="flex items-start">
+                            <CheckCircle className="mr-2 mt-0.5 h-4 w-4 flex-shrink-0 text-green-400" />
+                            <span>{pro}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="mb-4">
+                      <div className="mb-2 text-sm font-semibold text-red-400">Wady:</div>
+                      <ul className="space-y-1 text-sm text-gray-400">
+                        {filament.cons.map((con, i) => (
+                          <li key={i} className="flex items-start">
+                            <AlertCircle className="mr-2 mt-0.5 h-4 w-4 flex-shrink-0 text-red-400" />
+                            <span>{con}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="rounded-lg border border-white/10 bg-white/5 p-3">
+                      <div className="mb-1 text-sm font-semibold text-[#ffda75]">Najlepsze Zastosowania:</div>
+                      <div className="text-sm text-gray-400">{filament.uses}</div>
+                    </div>
+                    <div className="mt-4">
+                      <span className="text-s text-gray-500">Gdzie kupić: </span>
+                      <span className="mt-4 text-s text-yellow-500">{filament.szpulomat}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {activeSection === 'troubleshoot' && (
+          <section className="py-16 sm:py-24">
+            <div className="container mx-auto px-4 sm:px-6">
+              <div className="mb-12 text-center">
+                <h2 className="mb-4 text-3xl font-bold sm:text-4xl">Rozwiązywanie Problemów</h2>
+                <p className="text-gray-400">Szybkie porady na najczęstsze problemy</p>
+              </div>
+              <div className="mx-auto max-w-4xl space-y-4">
+                {troubleshooting.map((item, index) => (
+                  <div
+                    key={index}
+                    className="rounded-xl border border-white/10 bg-white/5 p-6 transition-all hover:border-[#ffda75]/30"
+                  >
+                    <div className="mb-3 flex items-start justify-between">
+                      <h3 className="text-xl font-bold">{item.problem}</h3>
+                      <span className={`rounded-full px-3 py-1 text-xs font-medium ${item.severity === 'high'
+                        ? 'bg-red-500/10 text-red-400'
+                        : 'bg-yellow-500/10 text-yellow-400'
+                        }`}>
+                        {item.severity === 'high' ? 'Priorytet wysoki' : 'Priorytet średni'}
+                      </span>
+                    </div>
+                    <div className="flex items-start">
+                      <CheckCircle className="mr-3 mt-1 h-5 w-5 flex-shrink-0 text-[#ffda75]" />
+                      <div>
+                        <div className="mb-1 text-sm font-semibold text-[#ffda75]">Rozwiązanie:</div>
+                        <p className="text-gray-400">{item.solution}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        <footer className="border-t border-white/10 py-8">
+          <div className="container mx-auto px-4 text-center text-gray-400 sm:px-6">
+            <p>&copy; {new Date().getFullYear()} Druk3D.pl - Kompendium wiedzy o druku 3D</p>
+          </div>
+        </footer>
+      </div>
+    </div>
+  );
+}
+
+export default App;
